@@ -11,7 +11,6 @@ const connect = async () => {
 };
 
 const runQueries = async () => {
-    // do logic of stuff in app
     console.log(`\nWhat would you like to do?
         
         1. Create a new customer
