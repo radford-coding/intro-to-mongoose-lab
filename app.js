@@ -63,6 +63,10 @@ const createCustomer = async (customerName, customerAge) => {
 
 const showCustomers = async () => {
     const customers = await Customer.find({});
+    if (customers.length === 0) {
+        console.log('No customers to show.');
+        return;
+    };
     customers.forEach(c => console.log(`id: ${c.id} -- Name: ${c.name}, Age: ${c.age}`));
 };
 
