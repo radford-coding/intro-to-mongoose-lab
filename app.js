@@ -76,7 +76,6 @@ const updateCustomer = async () => {
     const chosenCustomer = await Customer.findById(customerId);
     console.log(`\nWhat is ${chosenCustomer.name}\'s new name?`);
     let newCustomerName = await prompt('> ');
-    console.log(typeof newCustomerName);
     newCustomerName = newCustomerName[0].toUpperCase() + newCustomerName.slice(1).toLowerCase();
     console.log(`\nWhat is (was ${chosenCustomer.name}\'s, now ${newCustomerName}\'s) new age?`);
     const newCustomerAge = await prompt('> ');
