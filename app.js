@@ -4,15 +4,10 @@ dotenv.config();
 const mongoose = require('mongoose');
 const Customer = require('./models/customer');
 
-
-
-
 const connect = async () => {
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('You have entered the CRM.');
-
+    console.log('Welcome to the CRM!');
     await runQueries();
-
 };
 
 const runQueries = async () => {
@@ -28,6 +23,7 @@ const runQueries = async () => {
     const input = await prompt('Number of the action you want to do: ');
     if (input === '5') {
         await mongoose.disconnect();
+        await mongoose.connection.close(); // duplicating previous line?
         console.log('\nexiting. goodbyeeee.......');
         process.exit(); // seems like this doesn't matter with Node.js
     } else if (input === '1') {
@@ -47,8 +43,10 @@ const runQueries = async () => {
         await updateCustomer();
         await runQueries();
     } else if (input === '4') {
-        // delete
-        
+        console.log(`\nBelow is a list of all customers:`);
+        await showCustomers();
+        await deleteCustomer();
+        await runQueries();
     } else {
         console.log(`\ndoing ${input}`);
         await runQueries();
@@ -73,10 +71,10 @@ const updateCustomer = async () => {
     console.log(`\nCopy and paste the id of the customer you would like to update here:`);
     const customerId = await prompt('> ');
     const chosenCustomer = await Customer.findById(customerId);
-    console.log(`You have selected: ${chosenCustomer.name}`);
     console.log(`\nWhat is ${chosenCustomer.name}\'s new name?`);
-    const newCustomerName = await prompt('> ');
-    // console.log(`\nWhat is (was ${chosenCustomer.name}\'s, now ${newCustomerName[0].toUpperCase() + newCustomerName.slice(1).toLowerCase()}\'s) new age?`);
+    let newCustomerName = await prompt('> ');
+    console.log(typeof newCustomerName);
+    newCustomerName = newCustomerName[0].toUpperCase() + newCustomerName.slice(1).toLowerCase();
     console.log(`\nWhat is (was ${chosenCustomer.name}\'s, now ${newCustomerName}\'s) new age?`);
     const newCustomerAge = await prompt('> ');
     const updatedCustomer = await Customer.findByIdAndUpdate(
@@ -85,6 +83,13 @@ const updateCustomer = async () => {
         { new: true }
     );
     console.log(`Update successful.`);
+};
+
+const deleteCustomer = async () => {
+    console.log(`\nCopy and paste the id of the customer you would like to delete here:`);
+    const customerId = await prompt('> ');
+    const removedCustomer = await Customer.findByIdAndDelete(customerId);
+    console.log('Delete successful.');
 };
 
 connect();
