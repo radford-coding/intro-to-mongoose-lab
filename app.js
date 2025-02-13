@@ -29,7 +29,7 @@ const runQueries = async () => {
     if (input === '5') {
         await mongoose.disconnect();
         console.log('\nexiting. goodbyeeee.......');
-        process.exit(); // not sure why/when this is needed - seems like doesn't matter with Node.js
+        process.exit(); // seems like this doesn't matter with Node.js
     } else if (input === '1') {
         console.log('\nWhat is this new customer\'s name?');
         const customerName = await prompt('> ');
@@ -46,10 +46,13 @@ const runQueries = async () => {
         await showCustomers();
         await updateCustomer();
         await runQueries();
+    } else if (input === '4') {
+        // delete
+        
     } else {
         console.log(`\ndoing ${input}`);
         await runQueries();
-    }
+    };
 };
 
 const createCustomer = async (customerName, customerAge) => {
@@ -73,7 +76,8 @@ const updateCustomer = async () => {
     console.log(`You have selected: ${chosenCustomer.name}`);
     console.log(`\nWhat is ${chosenCustomer.name}\'s new name?`);
     const newCustomerName = await prompt('> ');
-    console.log(`\nWhat is (was ${chosenCustomer.name}\'s, now ${newCustomerName[0].toUpperCase() + newCustomerName.slice(1).toLowerCase()}\'s) new age?`);
+    // console.log(`\nWhat is (was ${chosenCustomer.name}\'s, now ${newCustomerName[0].toUpperCase() + newCustomerName.slice(1).toLowerCase()}\'s) new age?`);
+    console.log(`\nWhat is (was ${chosenCustomer.name}\'s, now ${newCustomerName}\'s) new age?`);
     const newCustomerAge = await prompt('> ');
     const updatedCustomer = await Customer.findByIdAndUpdate(
         customerId,
