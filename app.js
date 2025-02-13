@@ -38,16 +38,14 @@ const runQueries = async () => {
         await createCustomer(customerName, customerAge);
         await runQueries();
     } else if (input === '2') {
-        console.log('\n');
-        const customers = await Customer.find({});
-        console.log(`All customers:\n`);
-        customers.forEach(c => console.log(`id: ${c.id} -- Name: ${c.name}, Age: ${c.age}`));
+        console.log(`\nViewing all customers:`);
+        await showCustomers();
         await runQueries();
-        // Customer.find().then((customers) => {
-        //     customers.forEach((customer) => {
-        //         console.log(customer);
-        //     });
-        // });
+    } else if (input === '3') {
+        console.log(`\nBelow is a list of all customers:`);
+        await showCustomers();
+        await updateCustomer();
+        await runQueries();
     } else {
         console.log(`\ndoing ${input}`);
         await runQueries();
@@ -60,7 +58,29 @@ const createCustomer = async (customerName, customerAge) => {
         age: customerAge,
     };
     const customer = await Customer.create(customerData);
-    console.log(`\nNew customer: ${customer}`);
+    console.log(`\nAdded new customer: ${customer.name}`);
+};
+
+const showCustomers = async () => {
+    const customers = await Customer.find({});
+    customers.forEach(c => console.log(`id: ${c.id} -- Name: ${c.name}, Age: ${c.age}`));
+};
+
+const updateCustomer = async () => {
+    console.log(`\nCopy and paste the id of the customer you would like to update here:`);
+    const customerId = await prompt('> ');
+    const chosenCustomer = await Customer.findById(customerId);
+    console.log(`You have selected: ${chosenCustomer.name}`);
+    console.log(`\nWhat is ${chosenCustomer.name}\'s new name?`);
+    const newCustomerName = await prompt('> ');
+    console.log(`\nWhat is (was ${chosenCustomer.name}\'s, now ${newCustomerName[0].toUpperCase() + newCustomerName.slice(1).toLowerCase()}\'s) new age?`);
+    const newCustomerAge = await prompt('> ');
+    const updatedCustomer = await Customer.findByIdAndUpdate(
+        customerId,
+        { name: newCustomerName, age: newCustomerAge },
+        { new: true }
+    );
+    console.log(`Update successful.`);
 };
 
 connect();

@@ -13,6 +13,6 @@ customerSchema.pre('save', function (next) {
     next();
 });
 
-const Customer = mongoose.model('Todo', customerSchema);
+const Customer = mongoose.model('Customer', customerSchema);
 
 module.exports = Customer;
