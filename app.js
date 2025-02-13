@@ -31,9 +31,17 @@ const runQueries = async () => {
         console.log('\nexiting. goodbyeeee.......');
         process.exit(); // not sure why/when this is needed - seems like doesn't matter with Node.js
     } else if (input === '1') {
+        console.log('\nWhat is this new customer\'s name?');
+        const customerName = await prompt('> ');
+        console.log(`\nWhat is this new customer\'s age?`);
+        const customerAge = await prompt('> ');
+        await createCustomer(customerName, customerAge);
+        await runQueries();
+    } else if (input === '2') {
         console.log('\n');
         const customers = await Customer.find({});
-        console.log(`All customers: ${customers}`);
+        console.log(`All customers:\n`);
+        customers.forEach(c => console.log(`id: ${c.id} -- Name: ${c.name}, Age: ${c.age}`));
         await runQueries();
         // Customer.find().then((customers) => {
         //     customers.forEach((customer) => {
@@ -44,6 +52,15 @@ const runQueries = async () => {
         console.log(`\ndoing ${input}`);
         await runQueries();
     }
+};
+
+const createCustomer = async (customerName, customerAge) => {
+    const customerData = {
+        name: customerName,
+        age: customerAge,
+    };
+    const customer = await Customer.create(customerData);
+    console.log(`\nNew customer: ${customer}`);
 };
 
 connect();
